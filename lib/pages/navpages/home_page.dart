@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:travel_app/misc/colors.dart';
 import 'package:travel_app/widgets/app_large_text.dart';
+import 'package:travel_app/widgets/app_text.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -10,6 +11,12 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
+  var image = {
+    'Balloning': 'balloning.png',
+    'Hiking': 'hiking.png',
+    'Kayaking': 'kayaking.png',
+    'Snorkling': 'snorkling.png',
+  };
   @override
   Widget build(BuildContext context) {
     TabController _tabController = TabController(length: 3, vsync: this);
@@ -34,7 +41,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             ),
           ]),
           const SizedBox(
-            height: 40,
+            height: 20,
           ),
           // text
           AppLargeText(text: 'Discover'),
@@ -65,7 +72,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           ),
           Container(
             margin: const EdgeInsets.only(top: 10),
-            height: 300,
+            height: 260,
             width: double.maxFinite,
             child: TabBarView(
               controller: _tabController,
@@ -75,14 +82,15 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   scrollDirection: Axis.horizontal,
                   itemBuilder: (BuildContext contex, int index) {
                     return Container(
-                      margin: const EdgeInsets.only(right: 15, top: 10),
-                      width: 200,
-                      height: 300,
+                      margin: const EdgeInsets.only(right: 15, top: 5),
+                      width: 180,
+                      height: 260,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(25),
                         color: Colors.white,
                         image: const DecorationImage(
                           image: AssetImage('images/mountain.jpeg'),
+                          fit: BoxFit.cover,
                         ),
                       ),
                     );
@@ -92,6 +100,64 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 const Text('Bye')
               ],
             ),
+          ),
+          const SizedBox(
+            height: 15,
+          ),
+          Container(
+            margin: const EdgeInsets.only(top: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                AppLargeText(
+                  text: 'Explore more',
+                  size: 22,
+                ),
+                AppText(
+                  text: 'See all',
+                  color: AppColors.textColor1,
+                )
+              ],
+            ),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          Container(
+            height: 95,
+            width: double.maxFinite,
+            child: ListView.builder(
+                itemCount: 4,
+                scrollDirection: Axis.horizontal,
+                itemBuilder: (_, index) {
+                  return Container(
+                    margin: const EdgeInsets.only(right: 30),
+                    child: Column(
+                      children: [
+                        Container(
+                          width: 70,
+                          height: 70,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: Colors.white,
+                            image: DecorationImage(
+                              image: AssetImage(
+                                  'images/${image.values.elementAt(index)}'),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        AppText(
+                          text: image.keys.elementAt(index),
+                          color: AppColors.textColor2,
+                        ),
+                      ],
+                    ),
+                  );
+                }),
           )
         ]),
       ),
