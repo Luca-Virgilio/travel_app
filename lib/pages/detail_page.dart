@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:travel_app/cubit/app_cubit_states.dart';
+import 'package:travel_app/cubit/app_cubits.dart';
 import 'package:travel_app/misc/colors.dart';
 import 'package:travel_app/widgets/app_buttons.dart';
 import 'package:travel_app/widgets/app_large_text.dart';
@@ -18,7 +21,10 @@ class _DetailPageState extends State<DetailPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
+        body: BlocBuilder<AppCubits, CubitStates>(builder: (context, state) {
+      DetailState detail = state as DetailState;
+
+      return Container(
         height: double.maxFinite,
         width: double.maxFinite,
         child: Stack(
@@ -29,9 +35,10 @@ class _DetailPageState extends State<DetailPage> {
                 child: Container(
                   width: double.maxFinite,
                   height: 300,
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                     image: DecorationImage(
-                        image: AssetImage('images/mountain.jpeg'),
+                        image: NetworkImage(
+                            'http://mark.bslmeiyu.com/uploads/${detail.place.img}'),
                         fit: BoxFit.cover),
                   ),
                 )),
@@ -42,7 +49,9 @@ class _DetailPageState extends State<DetailPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      BlocProvider.of<AppCubits>(context).goHome();
+                    },
                     icon: Icon(Icons.menu),
                     color: Colors.white,
                   ),
@@ -50,7 +59,7 @@ class _DetailPageState extends State<DetailPage> {
               ),
             ),
             Positioned(
-              top: 230,
+              top: 210,
               child: Container(
                 padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
                 width: MediaQuery.of(context).size.width,
@@ -69,10 +78,12 @@ class _DetailPageState extends State<DetailPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         AppLargeText(
-                          text: 'Yosemite',
+                          text: detail.place.name,
                           color: Colors.black.withOpacity(0.8),
                         ),
-                        AppLargeText(text: '\$250', color: AppColors.mainColor),
+                        AppLargeText(
+                            text: '\$' + detail.place.price.toString(),
+                            color: AppColors.mainColor),
                       ],
                     ),
                     const SizedBox(
@@ -85,7 +96,7 @@ class _DetailPageState extends State<DetailPage> {
                           width: 5,
                         ),
                         AppText(
-                            text: 'USA, California',
+                            text: detail.place.location,
                             color: AppColors.mainColor),
                       ],
                     ),
@@ -98,7 +109,7 @@ class _DetailPageState extends State<DetailPage> {
                           children: List.generate(5, (index) {
                             return Icon(
                               Icons.star,
-                              color: index < gottenStars
+                              color: index < detail.place.stars
                                   ? AppColors.starColor
                                   : AppColors.textColor2,
                             );
@@ -107,7 +118,9 @@ class _DetailPageState extends State<DetailPage> {
                         const SizedBox(
                           width: 5,
                         ),
-                        AppText(text: '(4.0)', color: AppColors.textColor2)
+                        AppText(
+                            text: '(${detail.place.stars.toString()}.0)',
+                            color: AppColors.textColor2)
                       ],
                     ),
                     const SizedBox(
@@ -167,8 +180,7 @@ class _DetailPageState extends State<DetailPage> {
                       height: 5,
                     ),
                     AppText(
-                      text:
-                          'You must go for a travel. Travelling helps get ride of pressure. Go to mountains to see the nature.',
+                      text: detail.place.description,
                       color: AppColors.textColor2,
                     ),
                   ],
@@ -200,7 +212,7 @@ class _DetailPageState extends State<DetailPage> {
             ),
           ],
         ),
-      ),
-    );
+      );
+    }));
   }
 }
